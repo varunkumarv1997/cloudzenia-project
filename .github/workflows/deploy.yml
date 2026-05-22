@@ -20,21 +20,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
+
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker Image
-        run: |
-          docker build -t microservice .
+        run: docker build -t microservice .
 
-      - name: Tag Docker Image
-        run: |
-          docker tag microservice:latest 491085417418.dkr.ecr.ap-south-1.amazonaws.com/microservice-repo:latest
+      - name: Tag Image
+        run: docker tag microservice:latest 491085417418.dkr.ecr.ap-south-1.amazonaws.com/microservice-repo:latest
 
-      - name: Push Docker Image
-        run: |
-          docker push 491085417418.dkr.ecr.ap-south-1.amazonaws.com/microservice-repo:latest
+      - name: Push Image
+        run: docker push 491085417418.dkr.ecr.ap-south-1.amazonaws.com/microservice-repo:latest
 
       - name: Deploy to ECS
         run: |
